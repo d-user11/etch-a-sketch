@@ -14,26 +14,30 @@ function drawGrid(gridSize) {
         square.className = 'item';
         square.style.width = `${squareSize}%`
         square.addEventListener('mouseover', changeColor);
+        square.addEventListener('mousedown', changeColor);
         container.appendChild(square);
     }
 
 }
 
-function changeColor() {
-    if (!this.style.backgroundColor) {
-        console.log('No color. Setting it ...');
-        this.style.backgroundColor = getRandomColor();
-    } else {
-        const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
-        console.log(this.style.backgroundColor);
-        const matched = this.style.backgroundColor.match(rgbaReg);
-        if (matched) {
-            let red = matched[1];
-            let green = matched[2];
-            let blue = matched[3];
-            let alphaChannel = parseFloat(matched[4]) + 0.1;
-            console.log(alphaChannel)
-            this.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${alphaChannel})`;
+function changeColor(event) {
+    event.preventDefault();
+    if (event.buttons === 1) {
+        if (!this.style.backgroundColor) {
+            console.log('No color. Setting it ...');
+            this.style.backgroundColor = getRandomColor();
+        } else {
+            const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
+            console.log(this.style.backgroundColor);
+            const matched = this.style.backgroundColor.match(rgbaReg);
+            if (matched) {
+                let red = matched[1];
+                let green = matched[2];
+                let blue = matched[3];
+                let alphaChannel = parseFloat(matched[4]) + 0.1;
+                console.log(alphaChannel)
+                this.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${alphaChannel})`;
+            }
         }
     }
 }
