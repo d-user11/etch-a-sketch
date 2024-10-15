@@ -1,9 +1,24 @@
 const container = document.querySelector('div.container');
-const button = document.querySelector('button');
-
-button.addEventListener('click', resizeGrid);
-
 drawGrid(16);
+
+const resizeButton = document.querySelector('button');
+resizeButton.addEventListener('click', resizeGrid);
+
+const pen = document.querySelector('#pen');
+const eraser = document.querySelector('#eraser');
+let draw = false;
+
+pen.addEventListener('click', function() {
+    pen.style.filter = 'invert(1)';
+    eraser.style.filter = 'invert(0)';
+    draw = true;
+});
+
+eraser.addEventListener('click', function() {
+    eraser.style.filter = 'invert(1)';
+    pen.style.filter = 'invert(0)';
+    draw = false;
+});
 
 function drawGrid(gridSize) {
     let squareSize = 100 / gridSize;
@@ -13,16 +28,25 @@ function drawGrid(gridSize) {
         const square = document.createElement('div');
         square.className = 'item';
         square.style.width = `${squareSize}%`
-        square.addEventListener('mouseover', changeColor);
-        square.addEventListener('mousedown', changeColor);
+        square.addEventListener('mouseover', colorize);
+        square.addEventListener('mousedown', colorize);
+        square.addEventListener('mouseover', erase);
+        square.addEventListener('mousedown', erase);
         container.appendChild(square);
     }
 
 }
 
-function changeColor(event) {
+function erase(event) {
     event.preventDefault();
-    if (event.buttons === 1) {
+    if (event.buttons === 1 && !draw) {
+        this.style.backgroundColor = '';
+    }
+}
+
+function colorize(event) {
+    event.preventDefault();
+    if (event.buttons === 1 && draw) {
         if (!this.style.backgroundColor) {
             console.log('No color. Setting it ...');
             this.style.backgroundColor = getRandomColor();
