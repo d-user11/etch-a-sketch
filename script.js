@@ -4,20 +4,16 @@ drawGrid(16);
 const resizeButton = document.querySelector('button');
 resizeButton.addEventListener('click', resizeGrid);
 
-const pen = document.querySelector('#pen');
 const eraser = document.querySelector('#eraser');
-let draw = false;
-
-pen.addEventListener('click', function() {
-    pen.style.filter = 'invert(1)';
-    eraser.style.filter = 'invert(0)';
-    draw = true;
-});
+let drawFlag = true;
 
 eraser.addEventListener('click', function() {
-    eraser.style.filter = 'invert(1)';
-    pen.style.filter = 'invert(0)';
-    draw = false;
+    if (!drawFlag) {
+        eraser.style.filter = 'invert(0)';
+    } else {
+        eraser.style.filter = 'invert(1)';
+    }
+    drawFlag = !drawFlag;
 });
 
 const rainbow = document.querySelector('#rainbow');
@@ -44,6 +40,8 @@ gradient.addEventListener('click', function() {
     gradientFlag = !gradientFlag;
 });
 
+const colorInput = document.querySelector('#colorInput');
+
 function drawGrid(gridSize) {
     let squareSize = 100 / gridSize;
     console.log(`Square size is ${squareSize}%`);
@@ -63,20 +61,20 @@ function drawGrid(gridSize) {
 
 function erase(event) {
     event.preventDefault();
-    if (event.buttons === 1 && !draw) {
+    if (event.buttons === 1 && !drawFlag) {
         this.style.backgroundColor = '';
     }
 }
 
 function colorize(event) {
     event.preventDefault();
-    if (event.buttons === 1 && draw) {
+    if (event.buttons === 1 && drawFlag) {
         if (!this.style.backgroundColor) {
             console.log('No color. Setting it ...');
             if (rainbowFlag) {
                 this.style.backgroundColor = getRandomColor();
             } else {
-                this.style.backgroundColor = "rgb(0, 0, 0)";
+                this.style.backgroundColor = colorInput.value;
             }
             if (gradientFlag) {
                 let rgb = this.style.backgroundColor;

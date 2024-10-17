@@ -44,3 +44,10 @@ button {
     aspect-ratio: 1 / 1;
     border: 1px solid;
 }
+
+input#colorInput {
+    /* padding-top: 32px; */
+    width: 48px;
+    height: 48px;
+    align-self: center;
+}
