@@ -20,6 +20,18 @@ eraser.addEventListener('click', function() {
     draw = false;
 });
 
+const rainbow = document.querySelector('#rainbow');
+let rainbowFlag = false;
+
+rainbow.addEventListener('click', function() {
+    if (rainbowFlag) {
+        rainbow.setAttribute('src', 'images/rainbow-colorless.png');
+    } else {
+        rainbow.setAttribute('src', 'images/rainbow.png');
+    }
+    rainbowFlag = !rainbowFlag
+});
+
 function drawGrid(gridSize) {
     let squareSize = 100 / gridSize;
     console.log(`Square size is ${squareSize}%`);
@@ -49,7 +61,11 @@ function colorize(event) {
     if (event.buttons === 1 && draw) {
         if (!this.style.backgroundColor) {
             console.log('No color. Setting it ...');
-            this.style.backgroundColor = getRandomColor();
+            if (rainbowFlag) {
+                this.style.backgroundColor = getRandomColor();
+            } else {
+                this.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+            }
         } else {
             const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
             console.log(this.style.backgroundColor);
