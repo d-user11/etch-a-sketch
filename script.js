@@ -32,6 +32,18 @@ rainbow.addEventListener('click', function() {
     rainbowFlag = !rainbowFlag
 });
 
+const gradient = document.querySelector('#gradient');
+let gradientFlag = false;
+
+gradient.addEventListener('click', function() {
+    if (gradientFlag) {
+        gradient.style.filter = 'invert(0)';
+    } else {
+        gradient.style.filter = 'invert(1)';
+    }
+    gradientFlag = !gradientFlag;
+});
+
 function drawGrid(gridSize) {
     let squareSize = 100 / gridSize;
     console.log(`Square size is ${squareSize}%`);
@@ -64,9 +76,14 @@ function colorize(event) {
             if (rainbowFlag) {
                 this.style.backgroundColor = getRandomColor();
             } else {
-                this.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+                this.style.backgroundColor = "rgb(0, 0, 0)";
             }
-        } else {
+            if (gradientFlag) {
+                let rgb = this.style.backgroundColor;
+                let rgba = rgb.replace(')', ', 0.1)').replace('rgb', 'rgba');
+                this.style.backgroundColor = rgba;
+            }
+        } else if (gradientFlag) {
             const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
             console.log(this.style.backgroundColor);
             const matched = this.style.backgroundColor.match(rgbaReg);
@@ -86,7 +103,7 @@ function getRandomColor() {
     let red = Math.floor(Math.random() * 256);
     let green = Math.floor(Math.random() * 256);
     let blue = Math.floor(Math.random() * 256);
-    return `rgba(${red}, ${green}, ${blue}, 0.1)`;
+    return `rgb(${red}, ${green}, ${blue})`;
 }
 
 function resizeGrid() {
