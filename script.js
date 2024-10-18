@@ -42,6 +42,13 @@ gradient.addEventListener('click', function () {
 
 const colorInput = document.querySelector('#colorInput');
 
+colorInput.addEventListener('click', function () {
+    rainbowFlag = false;
+    rainbow.setAttribute('src', 'images/rainbow-colorless.png');
+    drawFlag = true;
+    eraser.style.filter = 'invert(0)';
+});
+
 function drawGrid(gridSize) {
     let squareSize = 100 / gridSize;
     console.log(`Square size is ${squareSize}%`);
