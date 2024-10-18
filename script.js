@@ -7,7 +7,7 @@ resizeButton.addEventListener('click', resizeGrid);
 const eraser = document.querySelector('#eraser');
 let drawFlag = true;
 
-eraser.addEventListener('click', function() {
+eraser.addEventListener('click', function () {
     if (!drawFlag) {
         eraser.style.filter = 'invert(0)';
     } else {
@@ -19,7 +19,7 @@ eraser.addEventListener('click', function() {
 const rainbow = document.querySelector('#rainbow');
 let rainbowFlag = false;
 
-rainbow.addEventListener('click', function() {
+rainbow.addEventListener('click', function () {
     if (rainbowFlag) {
         rainbow.setAttribute('src', 'images/rainbow-colorless.png');
     } else {
@@ -31,7 +31,7 @@ rainbow.addEventListener('click', function() {
 const gradient = document.querySelector('#gradient');
 let gradientFlag = false;
 
-gradient.addEventListener('click', function() {
+gradient.addEventListener('click', function () {
     if (gradientFlag) {
         gradient.style.filter = 'invert(0)';
     } else {
@@ -69,31 +69,51 @@ function erase(event) {
 function colorize(event) {
     event.preventDefault();
     if (event.buttons === 1 && drawFlag) {
-        if (!this.style.backgroundColor) {
-            console.log('No color. Setting it ...');
-            if (rainbowFlag) {
-                this.style.backgroundColor = getRandomColor();
+        let newColor;
+        if (rainbowFlag) {
+            newColor = getRandomColor();
+        } else {
+            newColor = hexToRGB(colorInput.value);
+        }
+        if (gradientFlag) {
+            if (isRGBA(this.style.backgroundColor)) {
+                newColor = increaseRGBAAlphaChanel(this.style.backgroundColor);
+            } else if (this.style.backgroundColor) {
+                newColor = this.style.backgroundColor;
             } else {
-                this.style.backgroundColor = colorInput.value;
-            }
-            if (gradientFlag) {
-                let rgb = this.style.backgroundColor;
-                let rgba = rgb.replace(')', ', 0.1)').replace('rgb', 'rgba');
-                this.style.backgroundColor = rgba;
-            }
-        } else if (gradientFlag) {
-            const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
-            console.log(this.style.backgroundColor);
-            const matched = this.style.backgroundColor.match(rgbaReg);
-            if (matched) {
-                let red = matched[1];
-                let green = matched[2];
-                let blue = matched[3];
-                let alphaChannel = parseFloat(matched[4]) + 0.1;
-                console.log(alphaChannel)
-                this.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${alphaChannel})`;
+                newColor = newColor.replace(')', ', 0.1)').replace('rgb', 'rgba');
             }
         }
+        this.style.backgroundColor = newColor;
+    }
+}
+
+function isRGBA(colorValue) {
+    const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
+    return rgbaReg.test(colorValue);
+}
+
+function increaseRGBAAlphaChanel(rgbaColor) {
+    const rgbaReg = /^rgba\((\d+), (\d+), (\d+), ([\d\.]+)/;
+    const matched = rgbaColor.match(rgbaReg);
+    if (matched) {
+        let red = matched[1];
+        let green = matched[2];
+        let blue = matched[3];
+        let alphaChannel = parseFloat(matched[4]) + 0.1;
+        return `rgba(${red}, ${green}, ${blue}, ${alphaChannel})`;
+    }
+    return '';
+}
+
+function hexToRGB(hexColor) {
+    const hexColorReg = /^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/;
+    const matched = hexColor.match(hexColorReg);
+    if (matched) {
+        let red = parseInt(`0x${matched[1]}`, 16);
+        let green = parseInt(`0x${matched[2]}`, 16);
+        let blue = parseInt(`0x${matched[3]}`, 16);
+        return `rgb(${red}, ${green}, ${blue})`;
     }
 }
 
